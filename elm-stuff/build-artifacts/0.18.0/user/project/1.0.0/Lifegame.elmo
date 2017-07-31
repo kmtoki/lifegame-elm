@@ -1,0 +1,117 @@
+var _user$project$Lifegame$env = F3(
+	function (y, x, lg) {
+		var f = function (_p0) {
+			var _p1 = _p0;
+			var _p2 = A2(_elm_lang$core$Array$get, _p1._0, lg.cells);
+			if (_p2.ctor === 'Nothing') {
+				return 0;
+			} else {
+				var _p3 = A2(_elm_lang$core$Array$get, _p1._1, _p2._0);
+				if (_p3.ctor === 'Nothing') {
+					return 0;
+				} else {
+					return _p3._0 ? 1 : 0;
+				}
+			}
+		};
+		var arounds = {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: y - 1, _1: x - 1},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: y - 1, _1: x},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: y - 1, _1: x + 1},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: y, _1: x - 1},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: y, _1: x + 1},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: y + 1, _1: x - 1},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: y + 1, _1: x},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: y + 1, _1: x + 1},
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		};
+		return _elm_lang$core$List$sum(
+			A2(_elm_lang$core$List$map, f, arounds));
+	});
+var _user$project$Lifegame$rule = F2(
+	function (b, n) {
+		var _p4 = {ctor: '_Tuple2', _0: b, _1: n};
+		_v3_3:
+		do {
+			if (_p4.ctor === '_Tuple2') {
+				if (_p4._0 === true) {
+					switch (_p4._1) {
+						case 2:
+							return true;
+						case 3:
+							return true;
+						default:
+							break _v3_3;
+					}
+				} else {
+					if (_p4._1 === 3) {
+						return true;
+					} else {
+						break _v3_3;
+					}
+				}
+			} else {
+				break _v3_3;
+			}
+		} while(false);
+		return false;
+	});
+var _user$project$Lifegame$next = function (lg) {
+	var cells = A2(
+		_elm_lang$core$Array$indexedMap,
+		F2(
+			function (y, xs) {
+				return A2(
+					_elm_lang$core$Array$indexedMap,
+					F2(
+						function (x, b) {
+							return A2(
+								_user$project$Lifegame$rule,
+								b,
+								A3(_user$project$Lifegame$env, y, x, lg));
+						}),
+					xs);
+			}),
+		lg.cells);
+	return _elm_lang$core$Native_Utils.update(
+		lg,
+		{count: lg.count + 1, cells: cells});
+};
+var _user$project$Lifegame$init = F2(
+	function (y, x) {
+		return {
+			size: {y: y, x: x},
+			count: 0,
+			isContiune: false,
+			cells: A2(
+				_elm_lang$core$Array$repeat,
+				y,
+				A2(_elm_lang$core$Array$repeat, x, false))
+		};
+	});
+var _user$project$Lifegame$Lifegame = F4(
+	function (a, b, c, d) {
+		return {size: a, count: b, isContiune: c, cells: d};
+	});

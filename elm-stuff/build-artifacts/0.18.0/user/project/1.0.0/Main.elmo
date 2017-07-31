@@ -1,0 +1,313 @@
+var _user$project$Main$viewLifegame = function (model) {
+	return A2(
+		_elm_lang$svg$Svg$svg,
+		{
+			ctor: '::',
+			_0: _elm_lang$svg$Svg_Attributes$width(
+				_elm_lang$core$Basics$toString(model.size.x * 50)),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$svg$Svg_Attributes$height(
+					_elm_lang$core$Basics$toString(model.size.y * 50)),
+				_1: {ctor: '[]'}
+			}
+		},
+		_elm_lang$core$List$concat(
+			_elm_lang$core$Array$toList(
+				A2(
+					_elm_lang$core$Array$indexedMap,
+					F2(
+						function (y, xs) {
+							return _elm_lang$core$Array$toList(
+								A2(
+									_elm_lang$core$Array$indexedMap,
+									F2(
+										function (x, b) {
+											return A2(
+												_elm_lang$svg$Svg$rect,
+												{
+													ctor: '::',
+													_0: _elm_lang$svg$Svg_Attributes$x(
+														_elm_lang$core$Basics$toString(x * 5)),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$svg$Svg_Attributes$y(
+															_elm_lang$core$Basics$toString(y * 5)),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$svg$Svg_Attributes$width('5'),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$svg$Svg_Attributes$height('5'),
+																_1: {
+																	ctor: '::',
+																	_0: _elm_lang$svg$Svg_Attributes$fill(
+																		b ? 'green' : 'black'),
+																	_1: {
+																		ctor: '::',
+																		_0: _elm_lang$svg$Svg_Attributes$stroke('black'),
+																		_1: {ctor: '[]'}
+																	}
+																}
+															}
+														}
+													}
+												},
+												{ctor: '[]'});
+										}),
+									xs));
+						}),
+					model.cells))));
+};
+var _user$project$Main$init = {
+	ctor: '_Tuple2',
+	_0: A2(_user$project$Lifegame$init, 0, 0),
+	_1: _elm_lang$core$Platform_Cmd$none
+};
+var _user$project$Main$RandomSet = function (a) {
+	return {ctor: 'RandomSet', _0: a};
+};
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'New':
+				return {
+					ctor: '_Tuple2',
+					_0: A2(_user$project$Lifegame$init, model.size.y, model.size.x),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'SetY':
+				var _p1 = _elm_lang$core$String$toInt(_p0._0);
+				if (_p1.ctor === 'Ok') {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								size: {x: model.size.x, y: _p1._0}
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
+			case 'SetX':
+				var _p2 = _elm_lang$core$String$toInt(_p0._0);
+				if (_p2.ctor === 'Ok') {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								size: {y: model.size.y, x: _p2._0}
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
+			case 'Start':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{isContiune: true}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'Next':
+				return {
+					ctor: '_Tuple2',
+					_0: _user$project$Lifegame$next(model),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'Stop':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{isContiune: false}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'RandomSet':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{cells: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				var gen = A2(
+					_elm_lang$core$Random$map,
+					_elm_lang$core$Array$fromList,
+					A2(
+						_elm_lang$core$Random$list,
+						model.size.y,
+						A2(
+							_elm_lang$core$Random$map,
+							_elm_lang$core$Array$fromList,
+							A2(_elm_lang$core$Random$list, model.size.x, _elm_lang$core$Random$bool))));
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: A2(_elm_lang$core$Random$generate, _user$project$Main$RandomSet, gen)
+				};
+		}
+	});
+var _user$project$Main$Random = {ctor: 'Random'};
+var _user$project$Main$Stop = {ctor: 'Stop'};
+var _user$project$Main$Next = {ctor: 'Next'};
+var _user$project$Main$subscriptions = function (model) {
+	return model.isContiune ? A2(
+		_elm_lang$core$Time$every,
+		_elm_lang$core$Time$millisecond * 100,
+		_elm_lang$core$Basics$always(_user$project$Main$Next)) : A2(
+		_elm_lang$core$Platform_Sub$map,
+		_elm_lang$core$Basics$always(_user$project$Main$Stop),
+		_elm_lang$core$Platform_Sub$none);
+};
+var _user$project$Main$Start = {ctor: 'Start'};
+var _user$project$Main$SetX = function (a) {
+	return {ctor: 'SetX', _0: a};
+};
+var _user$project$Main$SetY = function (a) {
+	return {ctor: 'SetY', _0: a};
+};
+var _user$project$Main$New = {ctor: 'New'};
+var _user$project$Main$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$input,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$type_('number'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$placeholder('y'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$SetY),
+									_1: {ctor: '[]'}
+								}
+							}
+						},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$input,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$type_('number'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$placeholder('x'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$SetX),
+										_1: {ctor: '[]'}
+									}
+								}
+							},
+							{ctor: '[]'}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$button,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$New),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('New'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$button,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$Start),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('Start'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$button,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$Stop),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('Stop'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$button,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$Random),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('Random'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							_elm_lang$core$Basics$toString(model.count)),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _user$project$Main$viewLifegame(model),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$Main$main = _elm_lang$html$Html$program(
+	{init: _user$project$Main$init, update: _user$project$Main$update, view: _user$project$Main$view, subscriptions: _user$project$Main$subscriptions})();
